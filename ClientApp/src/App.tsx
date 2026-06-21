@@ -1,7 +1,6 @@
 import React from "react";
-import axios from "axios";
 import { ScanResult } from "./types/minigit";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { darkTheme } from "./theme/darkTheme";
 import AppBar from "@mui/material/AppBar";
@@ -11,6 +10,7 @@ import Container from "@mui/material/Container/Container";
 import { ScanPathForm } from "./components/ScanPathForm";
 import { Alert } from "@mui/material";
 import { ScanResults } from "./components/ScanResults";
+import { apiService } from "./services/api.service";
 
 export default function MiniGitApplication() {
   const [path, setPath] = React.useState("");
@@ -27,11 +27,10 @@ export default function MiniGitApplication() {
     setError(null);
     setScanResult(null);
     try {
-      const response = await axios.get<ScanResult>("/api/minigit/scan", {
-        params: { path: path.trim() },
-      });
-      setScanResult(response.data);
-    } catch (err) {
+      const result = await apiService.scanDirectory(path);
+      setScanResult(result);
+    } catch (err: unknown) {
+      console.error('Scan error:', err);
       setError("An error occurred while scanning the directory.");
     } finally {
       setLoading(false);
