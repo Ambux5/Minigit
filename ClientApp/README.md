@@ -1,6 +1,6 @@
 # MiniGit Application
 
-A simple directory scanner to track file changes (new, modified, deleted).
+A simple directory analysis app to track file changes (new, modified, deleted).
 
 ## Quick Start
 
@@ -21,7 +21,7 @@ Test different scenarios by entering keywords:
 
 | Input | Scenario |
 |-------|----------|
-| `first` | First scan - all files new (9 items) |
+| `first` | First analysis - all files new (9 items) |
 | `modified` | Modified files - shows changes |
 | `deleted` | Deleted files - shows removed items |
 | anything else | Default mix - new + modified + deleted |

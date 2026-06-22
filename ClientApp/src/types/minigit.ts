@@ -1,14 +1,16 @@
 export interface FileEntry {
     relativePath: string;
     isDirectory: boolean;
-    version: string;
+    contentHash: string;
+    version: number;
 }
 
-export interface ScanResult {
-    isFistScan: boolean;
+export interface AnalyzeResult {
+    isFirstRun: boolean;
     newItems: FileEntry[];
-    modifiedItems: FileEntry[];
+    changedFiles: FileEntry[];
     deletedItems: FileEntry[];
-    allCurrentItems: FileEntry[];
-    scanAt: string;
+    allCurrentEntries: FileEntry[];
+    totalChanges: number;
+    analyzedAt: string;
 }
