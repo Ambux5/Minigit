@@ -57,6 +57,38 @@ Run tests:
 
 - `dotnet test tests/Minigit.Tests/Minigit.Tests.csproj`
 
+## Developer Scripts
+
+To simplify common workflows, the project includes root helper scripts for both platforms.
+
+- Windows (PowerShell): `dev.ps1`
+- Linux/macOS (bash): `dev.sh`
+
+Supported commands:
+
+- `build` - build backend and frontend
+- `run` - build everything and run the app in single-port mode on `http://localhost:5000` (serves UI + API together)
+- `test` - run backend tests
+
+Note: frontend steps in these scripts use `yarn`.
+
+Port behavior:
+
+- `./dev.ps1 run` or `./dev.sh run`: single app URL on `http://localhost:5000` (UI + API + OpenAPI docs)
+- Swagger/OpenAPI is available at `http://localhost:5000/swagger`
+
+Examples:
+
+- Windows:
+  - `./dev.ps1 build`
+  - `./dev.ps1 run`
+  - `./dev.ps1 test`
+- Linux/macOS:
+  - `chmod +x ./dev.sh`
+  - `./dev.sh build`
+  - `./dev.sh run`
+  - `./dev.sh test`
+
 ## UI
 
 The UI provides:

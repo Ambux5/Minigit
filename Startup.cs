@@ -55,13 +55,15 @@ namespace MiniGitApplication
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniGitApplication v1");
-                    c.RoutePrefix = "swagger";
-                });
             }
+
+            // Keep Swagger available in all environments for this demo app.
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniGitApplication v1");
+                c.RoutePrefix = "swagger";
+            });
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
