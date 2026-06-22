@@ -34,6 +34,29 @@ Example:
 
 `http://localhost:5000/api/minigit/analyze?path=C:%5Ctestdownload`
 
+## Backend Tests
+
+Simple NUnit tests are included in:
+
+- `tests/Minigit.Tests`
+
+Testing stack:
+
+- NUnit
+- FluentAssertions
+- FakeItEasy
+
+Covered scenarios:
+
+- `FolderManager` first run behavior
+- `FolderManager` diff detection (new/changed/deleted + version increment)
+- `FolderManager` invalid path handling
+- `MiniGitController` API response mapping (`400`, `404`, `200`)
+
+Run tests:
+
+- `dotnet test tests/Minigit.Tests/Minigit.Tests.csproj`
+
 ## UI
 
 The UI provides:
