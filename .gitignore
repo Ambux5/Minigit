@@ -1,0 +1,23 @@
+# .NET build outputs
+**/bin/
+**/obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Rider / VS / VS Code
+.vs/
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# ASP.NET Core static web assets artifacts
+obj/**/staticwebassets/

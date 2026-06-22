@@ -1,42 +1,41 @@
 import React from 'react';
-import { ScanResult } from '../types/minigit';
+import { AnalyzeResult } from '../types/minigit';
 import Box from '@mui/material/Box/Box';
 import Typography from '@mui/material/Typography/Typography';
-import { Alert, Chip, Divider, Paper } from '@mui/material';
+import { Alert, Chip, Divider, List, Paper } from '@mui/material';
 import { Folder } from '@mui/icons-material';
-import { List } from '@mui/material';
 import { EntryItem } from './EntryItem';
 import { DiffSection } from './DiffSection';
 
-interface ScanResultsProps {
-    scanResult: ScanResult;
+interface AnalyzeResultsProps {
+    analyzeResult: AnalyzeResult;
 }
 
-export function ScanResults({ scanResult }: Readonly<ScanResultsProps>) {
+export function AnalyzeResults({ analyzeResult }: Readonly<AnalyzeResultsProps>) {
     return (
         <>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
-                <Typography variant="h6">Scan Results</Typography>
-                {scanResult.isFistScan ? (
-                    <Typography variant="body2" color="info">(First Scan)</Typography>
+                <Typography variant="h6">Analyze Results</Typography>
+                {analyzeResult.isFirstRun ? (
+                    <Typography variant="body2" color="info">(First Analysis)</Typography>
                 ) : (
-                    <Typography variant="body2" color="textSecondary">(Scan Difference)</Typography>
+                    <Typography variant="body2" color="textSecondary">(Differences)</Typography>
                 )}
                 <Typography variant="caption" color="text.secondary" sx={{ ml: "auto" }}>
-                    {new Date(scanResult.scanAt).toLocaleString()}
+                    {new Date(analyzeResult.analyzedAt).toLocaleString()}
                 </Typography>
             </Box>
 
-            {scanResult.isFistScan ? (
+            {analyzeResult.isFirstRun ? (
                 <Paper sx={{ p: 2, mb: 2 }} elevation={3}>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                         <Folder color="primary" />
                         <Typography variant="subtitle1">All Current Items</Typography>
-                        <Chip label={`${scanResult.allCurrentItems.length}`} size="small" color="primary" sx={{ ml: "auto" }} />
+                        <Chip label={`${analyzeResult.allCurrentEntries.length}`} size="small" color="primary" sx={{ ml: "auto" }} />
                     </Box>
                     <Divider sx={{ mb: 2 }} />
                     <List dense disablePadding>
-                        {scanResult.allCurrentItems.map((item) => (
+                        {analyzeResult.allCurrentEntries.map((item) => (
                             <EntryItem key={item.relativePath} entry={item} />
                         ))}
                     </List>
@@ -46,7 +45,7 @@ export function ScanResults({ scanResult }: Readonly<ScanResultsProps>) {
                     title="Added Items"
                     color="success"
                     icon={<Folder color="success" />}
-                    entries={scanResult.newItems}
+                    entries={analyzeResult.newItems}
                     emptyText="No added items"
                 />
 
@@ -54,7 +53,7 @@ export function ScanResults({ scanResult }: Readonly<ScanResultsProps>) {
                     title="Modified Items"
                     color="warning"
                     icon={<Folder color="warning" />}
-                    entries={scanResult.modifiedItems}
+                    entries={analyzeResult.changedFiles}
                     emptyText="No modified items"
                 />
 
@@ -62,12 +61,12 @@ export function ScanResults({ scanResult }: Readonly<ScanResultsProps>) {
                     title="Removed Items"
                     color="error"
                     icon={<Folder color="error" />}
-                    entries={scanResult.deletedItems}
+                    entries={analyzeResult.deletedItems}
                     emptyText="No removed items"
                 />
 
-                {scanResult.newItems.length === 0 && scanResult.modifiedItems.length === 0 && scanResult.deletedItems.length === 0 && (
-                    <Alert severity="success">No changes detected in this scan.</Alert>
+                {analyzeResult.newItems.length === 0 && analyzeResult.changedFiles.length === 0 && analyzeResult.deletedItems.length === 0 && (
+                    <Alert severity="success">No changes detected in this analysis.</Alert>
                 )}
             </>)}
 

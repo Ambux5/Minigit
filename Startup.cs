@@ -1,3 +1,13 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using MiniGitApplication.Abstractions;
+using MiniGitApplication.Managers;
+using MiniGitApplication.Options;
+
 namespace MiniGitApplication
 {
     public class Startup
@@ -14,11 +24,22 @@ namespace MiniGitApplication
         {
             services.Configure<FolderOptions>(Configuration.GetSection(FolderOptions.SectionName));
 
-            services.AddControllersWithViews();
+            // Enable CORS for React dev server (localhost:3000)
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
+            services.AddControllers();
 
             services.AddSingleton<IFolderManager, FolderManager>();
 
-            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MiniGitApplication", Version = "v1" });
@@ -35,7 +56,11 @@ namespace MiniGitApplication
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniGitApplication v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MiniGitApplication v1");
+                    c.RoutePrefix = "swagger";
+                });
             }
 
             app.UseStaticFiles();
@@ -43,21 +68,23 @@ namespace MiniGitApplication
 
             app.UseRouting();
 
+            // Enable CORS for React dev server
+            app.UseCors("AllowReactApp");
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
-            app.UseSpa(spa =>
+            // Only in production: serve static React files
+            if (!env.IsDevelopment())
             {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment()) spa.UseReactDevelopmentServer("start");
-            });
-            
-
+                app.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "ClientApp";
+                    // React files are pre-built in ClientApp/build
+                });
+            }
         }
     }
 }

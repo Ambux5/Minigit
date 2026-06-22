@@ -1,5 +1,5 @@
 import React from "react";
-import { ScanResult } from "./types/minigit";
+import { AnalyzeResult } from "./types/minigit";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { darkTheme } from "./theme/darkTheme";
@@ -7,31 +7,31 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container/Container";
-import { ScanPathForm } from "./components/ScanPathForm";
+import { AnalyzePathForm } from "./components/AnalyzePathForm";
 import { Alert } from "@mui/material";
-import { ScanResults } from "./components/ScanResults";
+import { AnalyzeResults } from "./components/AnalyzeResults";
 import { apiService } from "./services/api.service";
 
 export default function MiniGitApplication() {
   const [path, setPath] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  const [scanResult, setScanResult] = React.useState<ScanResult | null>(null);
+  const [analyzeResult, setAnalyzeResult] = React.useState<AnalyzeResult | null>(null);
   const [error, setError] = React.useState<string | null>(null);
 
-  const scanDirectory = async () => {
+  const analyzeDirectory = async () => {
     if (!path.trim()) {
       console.log("Please enter a valid directory path.");
       return;
     }
     setLoading(true);
     setError(null);
-    setScanResult(null);
+    setAnalyzeResult(null);
     try {
-      const result = await apiService.scanDirectory(path);
-      setScanResult(result);
+      const result = await apiService.analyzeDirectory(path);
+      setAnalyzeResult(result);
     } catch (err: unknown) {
-      console.error('Scan error:', err);
-      setError("An error occurred while scanning the directory.");
+      console.error('Analyze error:', err);
+      setError("An error occurred while analyzing the directory.");
     } finally {
       setLoading(false);
     }
@@ -54,18 +54,18 @@ export default function MiniGitApplication() {
 
       {/* -- main content -- */}
       <Container maxWidth="md" sx={{ py: 4 }}>
-        <ScanPathForm
+        <AnalyzePathForm
           path={path}
           loading={loading}
           onPathChange={setPath}
-          onScan={scanDirectory}
+          onAnalyze={analyzeDirectory}
         />
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
-        {scanResult && <ScanResults scanResult={scanResult} />}
+        {analyzeResult && <AnalyzeResults analyzeResult={analyzeResult} />}
       </Container>
     </ThemeProvider>
   );
